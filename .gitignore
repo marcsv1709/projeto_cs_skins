@@ -1,0 +1,5 @@
+# Ignorar arquivo de variáveis de ambiente
+.env
+
+# Ignorar pasta de dependências do Composer
+vendor/
