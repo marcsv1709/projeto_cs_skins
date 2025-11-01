@@ -17,25 +17,23 @@ define('WEB_STYLE_DARK', true);
 
 // Lógica de conexão inteligente para Local / Railway
 
-// PRIMEIRO: Tenta usar as variáveis separadas do Railway (forma preferida)
-if (getenv('MYSQL_HOST')) {
-    define('DB_HOST', getenv('MYSQL_HOST'));
-    define('DB_PORT', getenv('MYSQL_PORT') ?: '3306');
-    define('DB_NAME', getenv('MYSQL_DATABASE'));
-    define('DB_USER', getenv('MYSQL_USER'));
-    define('DB_PASS', getenv('MYSQL_PASSWORD'));
+// PRIMEIRO: Tenta usar as variáveis separadas do Railway (baseado na sua imagem)
+if (getenv('MYSQLHOST')) {
+    define('DB_HOST', getenv('MYSQLHOST'));
+    define('DB_PORT', getenv('MYSQLPORT') ?: '3306');
+    // O Railway te dá MYSQL_DATABASE e MYSQLDATABASE, vamos checar as duas
+    define('DB_NAME', getenv('MYSQL_DATABASE') ?: getenv('MYSQLDATABASE'));
+    define('DB_USER', getenv('MYSQLUSER'));
+    define('DB_PASS', getenv('MYSQLPASSWORD'));
 } 
 // SEGUNDO: Se não achar, tenta usar a URL de conexão (outra forma do Railway)
-elseif (getenv('DATABASE_URL') || getenv('MYSQL_URL')) {
-    // Pega qualquer variável de URL que existir
-    $dbUrl = getenv('DATABASE_URL') ?: getenv('MYSQL_URL');
-    
-    // Faz o "parse" da URL para extrair as partes
+elseif (getenv('MYSQL_URL')) {
+    $dbUrl = getenv('MYSQL_URL');
     $dbConfig = parse_url($dbUrl);
     
     define('DB_HOST', $dbConfig['host']);
     define('DB_PORT', $dbConfig['port'] ?? '3306');
-    define('DB_NAME', ltrim($dbConfig['path'], '/')); // Remove a barra "/" inicial
+    define('DB_NAME', ltrim($dbConfig['path'], '/')); 
     define('DB_USER', $dbConfig['user']);
     define('DB_PASS', $dbConfig['pass']);
 } 
@@ -45,7 +43,7 @@ else {
     define('DB_PORT', getenv('DB_PORT') ?: '3306');
     define('DB_NAME', getenv('DB_NAME') ?: 'skins');
     define('DB_USER', getenv('DB_USER') ?: 'root');
-    define('DB_PASS', getenv('DB_PASS') ?: ''); // Padrão é senha vazia
+    define('DB_PASS', getenv('DB_PASS') ?: ''); 
 }
 
 // --- Outras Configurações (Lidas do .env ou Railway) ---
